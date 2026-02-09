@@ -1,0 +1,12 @@
+//
+//  MainViewProtocol.swift
+//  ABCBankTestTask
+//
+//  Created by Alice Versa on 09/02/2026.
+//
+
+protocol MainViewProtocol: AnyObject {
+    func displayPages(_ pages: [PageModel])
+    func displayCurrentPage(_ index: Int, items: [String])
+}
+
