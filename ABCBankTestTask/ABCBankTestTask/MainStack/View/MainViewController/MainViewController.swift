@@ -12,12 +12,13 @@ class MainViewController: UIViewController {
     var presenter: MainPresenterProtocol
     private var pages: [PageModel] = []
     private var currentItems: [String] = []
-    
     private var itemsListViewHeightConstraint: NSLayoutConstraint!
     
-    private let scrollView: UIScrollView = {
+    // Containers
+    private lazy var scrollView: UIScrollView = {
         let sv = UIScrollView()
         sv.translatesAutoresizingMaskIntoConstraints = false
+        sv.delegate = self
         return sv
     }()
 
@@ -55,15 +56,42 @@ class MainViewController: UIViewController {
         return tableView
     }()
     
-    // Searchbar
+    // Searchbars
     private lazy var searchBarView: UISearchBar = {
         let searchBar = UISearchBar()
         searchBar.placeholder = "Search items..."
         searchBar.delegate = self
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
         return searchBar
     }()
     
-    // TODO: button
+    private lazy var stickySearchBarView: UISearchBar = {
+        let searchBar = UISearchBar()
+        searchBar.placeholder = "Search items..."
+        searchBar.delegate = self
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        searchBar.isHidden = true
+        return searchBar
+    }()
+    
+    // Fab Button
+    private lazy var fabButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("📊", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 30)
+        button.backgroundColor = .systemBlue
+        button.tintColor = .white
+        button.layer.cornerRadius = 30
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOffset = CGSize(width: 0, height: 2)
+        button.layer.shadowRadius = 4
+        button.layer.shadowOpacity = 0.3
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(fabButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    // MARK: Lyfecycle
     
     init(presenter: MainPresenterProtocol) {
         self.presenter = presenter
@@ -76,28 +104,63 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
+        setupAppearance()
+        setupConstraints()
+        setupKeyboardDismissGesture()
         presenter.viewDidLoad()
     }
-        
+    
+    // MARK: Private methods
+    
+    private func setupAppearance() {
+        view.backgroundColor = .blue
+    }
+    
+    @objc private func fabButtonTapped() {
+        presenter.didTapStatistics()
+    }
+    
+    private func setupKeyboardDismissGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
 }
 
-// MARK: - UI setup
+// MARK: - Setup constraints
 
 extension MainViewController {
     
-    private func setupUI() {
-        view.backgroundColor = .blue
-        
+    private func setupConstraints() {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         contentView.addSubview(carouselView)
+        contentView.addSubview(searchBarView)
         contentView.addSubview(itemsListView)
+        view.addSubview(fabButton)
+        view.addSubview(stickySearchBarView)
         
+        setupStickySearchBarConstraints()
         setupScrollViewConstraints()
         setupContentViewConstraints()
         setupCarouselViewConstraints()
+        setupSearchBarConstraints()
         setupItemsListViewConstraints()
+        setupFabButtonConstraints()
+    }
+    
+    private func setupStickySearchBarConstraints() {
+        NSLayoutConstraint.activate([
+            stickySearchBarView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            stickySearchBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            stickySearchBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            stickySearchBarView.heightAnchor.constraint(equalToConstant: 56)
+        ])
+        stickySearchBarView.layer.zPosition = 1000
     }
     
     private func setupScrollViewConstraints() {
@@ -127,23 +190,41 @@ extension MainViewController {
             carouselView.heightAnchor.constraint(equalToConstant: 250)
         ])
     }
+    
+    private func setupSearchBarConstraints() {
+        NSLayoutConstraint.activate([
+            searchBarView.topAnchor.constraint(equalTo: carouselView.bottomAnchor),
+            searchBarView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            searchBarView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            searchBarView.heightAnchor.constraint(equalToConstant: 56)
+        ])
+    }
         
     private func setupItemsListViewConstraints() {
         itemsListViewHeightConstraint = itemsListView.heightAnchor.constraint(
-            equalToConstant: CGFloat(currentItems.count) * 60 + 50
+            equalToConstant: CGFloat(currentItems.count) * 60
         )
         NSLayoutConstraint.activate([
-            itemsListView.topAnchor.constraint(equalTo: carouselView.bottomAnchor, constant: 20),
+            itemsListView.topAnchor.constraint(equalTo: searchBarView.bottomAnchor),
             itemsListView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             itemsListView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            itemsListView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            itemsListView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20),
             itemsListViewHeightConstraint
+        ])
+    }
+    
+    private func setupFabButtonConstraints() {
+        NSLayoutConstraint.activate([
+            fabButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            fabButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            fabButton.widthAnchor.constraint(equalToConstant: 60),
+            fabButton.heightAnchor.constraint(equalToConstant: 60)
         ])
     }
     
 }
 
-// MARK: - CollectionView delegate & datasource
+// MARK: - CollectionView delegate & datasource (For the carousel)
 
 extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
@@ -170,13 +251,37 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        guard scrollView == carouselView else { return }
+        
         let pageIndex = Int(scrollView.contentOffset.x / scrollView.frame.width)
         presenter.didSelectPage(pageIndex)
     }
     
 }
 
-// MARK: - UITableView delegate & datasource
+// MARK: - UIScrollViewDelegate (for sticky search bar)
+
+extension MainViewController: UIScrollViewDelegate {
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard scrollView == self.scrollView else { return }
+        
+        let searchBarY = carouselView.frame.height
+        let scrollOffset = scrollView.contentOffset.y
+        
+        if scrollOffset >= searchBarY {
+            stickySearchBarView.isHidden = false
+            stickySearchBarView.text = searchBarView.text
+            searchBarView.alpha = 0
+        } else {
+            stickySearchBarView.isHidden = true
+            searchBarView.alpha = 1
+        }
+    }
+    
+}
+
+// MARK: - UITableView delegate & datasource (for the list of items)
 
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -193,19 +298,21 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         return 60
     }
     
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        searchBarView
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        50
-    }
 }
 
 // MARK: - UISearchBar delegate
 
 extension MainViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        presenter.didSearch(searchText)
+        
+        searchBarView.text = searchText
+        stickySearchBarView.text = searchText
+    }
     
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
 }
 
 // MARK: - MainViewProtocol
@@ -220,10 +327,21 @@ extension MainViewController: MainViewProtocol {
     func displayCurrentPage(_ index: Int, items: [String]) {
         self.currentItems = items
         
-        let height = CGFloat(items.count) * 60 + 50
+        let height = CGFloat(items.count) * 60
         itemsListViewHeightConstraint.constant = height
         
         itemsListView.reloadData()
+    }
+    
+    func displayStatistics(_ statistics: StatisticsModel) {
+        let statsVC = StatisticsViewController(statistics: statistics)
+        
+        if let sheet = statsVC.sheetPresentationController {
+            sheet.detents = [.medium()]
+            sheet.prefersGrabberVisible = true
+        }
+        
+        present(statsVC, animated: true)
     }
     
 }

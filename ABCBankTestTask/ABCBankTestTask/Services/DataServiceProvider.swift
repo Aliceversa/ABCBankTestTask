@@ -22,7 +22,7 @@ class DataServiceProvider: PagesProviderProtocol {
                 ),
                 PageModel(
                     imageName: "fruits",
-                    items: ["apple", "orange", "banana", "strawberry", "pineapple", "grapes", "raspberries"]
+                    items: ["apple", "orange", "banana", "strawberry", "pineapple", "grapes", "raspberries", "watermelon", "apple"]
                 ),
             ]
             completion(pages)

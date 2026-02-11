@@ -8,5 +8,6 @@
 protocol MainViewProtocol: AnyObject {
     func displayPages(_ pages: [PageModel])
     func displayCurrentPage(_ index: Int, items: [String])
+    func displayStatistics(_ statistics: StatisticsModel)
 }
 
