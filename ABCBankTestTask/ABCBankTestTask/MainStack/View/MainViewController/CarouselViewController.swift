@@ -7,9 +7,10 @@
 
 import UIKit
 
-class MainViewController: UIViewController {
+final class CarouselViewController: UIViewController {
 
-    var presenter: MainPresenterProtocol
+    var presenter: CarouselPresenterProtocol
+    
     private var pages: [PageModel] = []
     private var currentItems: [String] = []
     private var itemsListViewHeightConstraint: NSLayoutConstraint!
@@ -93,7 +94,7 @@ class MainViewController: UIViewController {
     
     // MARK: Lyfecycle
     
-    init(presenter: MainPresenterProtocol) {
+    init(presenter: CarouselPresenterProtocol) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }
@@ -131,9 +132,127 @@ class MainViewController: UIViewController {
     }
 }
 
-// MARK: - Setup constraints
+// MARK: - CarouselViewControllerProtocol realisation
 
-extension MainViewController {
+extension CarouselViewController: CarouselViewControllerProtocol {
+    
+    func displayPages(_ pages: [PageModel]) {
+        self.pages = pages
+        carouselView.reloadData()
+    }
+    
+    func displayCurrentPage(_ index: Int, items: [String]) {
+        self.currentItems = items
+        let height = CGFloat(items.count) * 60
+        itemsListViewHeightConstraint.constant = height
+        itemsListView.reloadData()
+    }
+    
+    func displayStatistics(_ statistics: StatisticsModel) {
+        let statsVC = StatisticsViewController(statistics: statistics)
+        if let sheet = statsVC.sheetPresentationController {
+            sheet.detents = [.medium()]
+            sheet.prefersGrabberVisible = true
+        }
+        present(statsVC, animated: true)
+    }
+    
+}
+
+// MARK: - CollectionView delegate & datasource (For the carousel)
+
+extension CarouselViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        pages.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: CarouselCell.reuseId,
+            for: indexPath
+        ) as? CarouselCell else {
+            return UICollectionViewCell()
+        }
+        
+        let imageName = pages[indexPath.row].imageName
+        cell.configureWith(imageName: imageName)
+        
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return collectionView.bounds.size
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        guard scrollView == carouselView else { return }
+        
+        let pageIndex = Int(scrollView.contentOffset.x / scrollView.frame.width)
+        presenter.didSelectPage(pageIndex)
+    }
+    
+}
+
+// MARK: - UIScrollViewDelegate (for sticky search bar)
+
+extension CarouselViewController: UIScrollViewDelegate {
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard scrollView == self.scrollView else { return }
+        
+        let searchBarY = carouselView.frame.height
+        let scrollOffset = scrollView.contentOffset.y
+        
+        if scrollOffset >= searchBarY {
+            stickySearchBarView.isHidden = false
+            stickySearchBarView.text = searchBarView.text
+            searchBarView.alpha = 0
+        } else {
+            stickySearchBarView.isHidden = true
+            searchBarView.alpha = 1
+        }
+    }
+    
+}
+
+// MARK: - UITableView delegate & datasource (for the list of items)
+
+extension CarouselViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        currentItems.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ListItemCell", for: indexPath)
+        cell.textLabel?.text = currentItems[indexPath.row]
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 60
+    }
+    
+}
+
+// MARK: - UISearchBar delegate
+
+extension CarouselViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        presenter.didSearch(searchText)
+        
+        searchBarView.text = searchText
+        stickySearchBarView.text = searchText
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
+}
+
+// MARK: - Constraints Setup
+
+extension CarouselViewController {
     
     private func setupConstraints() {
         view.addSubview(scrollView)
@@ -220,128 +339,6 @@ extension MainViewController {
             fabButton.widthAnchor.constraint(equalToConstant: 60),
             fabButton.heightAnchor.constraint(equalToConstant: 60)
         ])
-    }
-    
-}
-
-// MARK: - CollectionView delegate & datasource (For the carousel)
-
-extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        pages.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: CarouselCell.reuseId,
-            for: indexPath
-        ) as? CarouselCell else {
-            return UICollectionViewCell()
-        }
-        
-        let imageName = pages[indexPath.row].imageName
-        cell.configureWith(imageName: imageName)
-        
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return collectionView.bounds.size
-    }
-    
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        guard scrollView == carouselView else { return }
-        
-        let pageIndex = Int(scrollView.contentOffset.x / scrollView.frame.width)
-        presenter.didSelectPage(pageIndex)
-    }
-    
-}
-
-// MARK: - UIScrollViewDelegate (for sticky search bar)
-
-extension MainViewController: UIScrollViewDelegate {
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard scrollView == self.scrollView else { return }
-        
-        let searchBarY = carouselView.frame.height
-        let scrollOffset = scrollView.contentOffset.y
-        
-        if scrollOffset >= searchBarY {
-            stickySearchBarView.isHidden = false
-            stickySearchBarView.text = searchBarView.text
-            searchBarView.alpha = 0
-        } else {
-            stickySearchBarView.isHidden = true
-            searchBarView.alpha = 1
-        }
-    }
-    
-}
-
-// MARK: - UITableView delegate & datasource (for the list of items)
-
-extension MainViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        currentItems.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ListItemCell", for: indexPath)
-        cell.textLabel?.text = currentItems[indexPath.row]
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 60
-    }
-    
-}
-
-// MARK: - UISearchBar delegate
-
-extension MainViewController: UISearchBarDelegate {
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        presenter.didSearch(searchText)
-        
-        searchBarView.text = searchText
-        stickySearchBarView.text = searchText
-    }
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.resignFirstResponder()
-    }
-}
-
-// MARK: - MainViewProtocol
-
-extension MainViewController: MainViewProtocol {
-    
-    func displayPages(_ pages: [PageModel]) {
-        self.pages = pages
-        carouselView.reloadData()
-    }
-    
-    func displayCurrentPage(_ index: Int, items: [String]) {
-        self.currentItems = items
-        
-        let height = CGFloat(items.count) * 60
-        itemsListViewHeightConstraint.constant = height
-        
-        itemsListView.reloadData()
-    }
-    
-    func displayStatistics(_ statistics: StatisticsModel) {
-        let statsVC = StatisticsViewController(statistics: statistics)
-        
-        if let sheet = statsVC.sheetPresentationController {
-            sheet.detents = [.medium()]
-            sheet.prefersGrabberVisible = true
-        }
-        
-        present(statsVC, animated: true)
     }
     
 }

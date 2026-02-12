@@ -6,7 +6,7 @@
 //
 
 
-protocol MainPresenterProtocol: AnyObject {
+protocol CarouselPresenterProtocol: AnyObject {
     func viewDidLoad()
     func didSelectPage(_ index: Int)
     func didSearch(_ text: String)
