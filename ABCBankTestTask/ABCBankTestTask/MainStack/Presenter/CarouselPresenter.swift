@@ -23,7 +23,6 @@ final class CarouselPresenter {
     }
     
     private func calculateStatistics() -> StatisticsModel {
-        
         // Get pages statistics (number and items count)
         let pageStats = pages.enumerated().map { (index, page) in
             (pageNumber: index + 1, itemCount: page.items.count)
