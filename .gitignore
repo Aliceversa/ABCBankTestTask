@@ -1,0 +1,16 @@
+# Xcode user settings
+*.xcuserstate
+*.xcuserdatad
+xcuserdata/
+
+# Other common ignores
+.DS_Store
+*.swp
+*.swo
+*~
+DerivedData/
+build/
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
