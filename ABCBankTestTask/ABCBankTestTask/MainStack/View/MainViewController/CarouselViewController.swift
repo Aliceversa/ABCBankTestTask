@@ -114,7 +114,7 @@ final class CarouselViewController: UIViewController {
     // MARK: Private methods
     
     private func setupAppearance() {
-        view.backgroundColor = .blue
+        view.backgroundColor = .white
     }
     
     @objc private func fabButtonTapped() {
