@@ -2,7 +2,7 @@
 //  MainPresenter.swift
 //  ABCBankTestTask
 //
-//  Created by Alice Versa on 09/02/2026.
+//  Created by Andrew Isaenko on 09/02/2026.
 //
 
 final class CarouselPresenter {
@@ -18,35 +18,33 @@ final class CarouselPresenter {
         self.dataService = dataService
     }
     
-    public func setViewController(_ vc: CarouselViewControllerProtocol) {
-        self.viewController = vc
+    public func setViewController(_ viewController: CarouselViewControllerProtocol) {
+        self.viewController = viewController
     }
     
     private func calculateStatistics() -> StatisticsModel {
         // Get pages statistics (number and items count)
-        let pageStats = pages.enumerated().map { (index, page) in
-            (pageNumber: index + 1, itemCount: page.items.count)
+        let pageStats: [PageStat] = pages.enumerated().map { (index, page) in
+            PageStat(pageNumber: index + 1, itemCount: page.items.count)
         }
         
         // Calculate all characters (without spaces and symbols)
-        var characterCounts: [Character: Int] = [:]
-        for page in pages {
-            for item in page.items {
-                for char in item.lowercased() {
-                    if char.isLetter {
-                        characterCounts[char, default: 0] += 1
-                    }
-                }
-            }
-        }
+        let characterCounts: [Character: Int] = pages
+           .flatMap { $0.items }
+           .joined()
+           .lowercased()
+           .filter { $0.isLetter }
+           .reduce(into: [:]) { counts, char in
+               counts[char, default: 0] += 1
+           }
         
         // Get top 3 characters
-        let topCharacters = characterCounts
+        let topCharactersStats = characterCounts
             .sorted { $0.value > $1.value }
             .prefix(3)
-            .map { (character: $0.key, count: $0.value) }
+            .map { TopCharacterStat(character: $0.key, count: $0.value) }
         
-        return StatisticsModel(pageStats: pageStats, topCharacters: topCharacters)
+        return StatisticsModel(pagesStats: pageStats, topCharactersStats: topCharactersStats)
     }
     
 }

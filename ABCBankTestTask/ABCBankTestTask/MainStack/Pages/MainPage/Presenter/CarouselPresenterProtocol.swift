@@ -2,9 +2,8 @@
 //  MainPresenterProtocol.swift
 //  ABCBankTestTask
 //
-//  Created by Alice Versa on 09/02/2026.
+//  Created by Andrew Isaenko on 09/02/2026.
 //
-
 
 protocol CarouselPresenterProtocol: AnyObject {
     func viewDidLoad()
@@ -12,4 +11,3 @@ protocol CarouselPresenterProtocol: AnyObject {
     func didSearch(_ text: String)
     func didTapStatistics()
 }
-

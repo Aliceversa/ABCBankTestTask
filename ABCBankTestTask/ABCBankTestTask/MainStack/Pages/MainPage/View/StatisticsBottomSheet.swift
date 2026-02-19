@@ -2,7 +2,7 @@
 //  StatisticsViewController.swift
 //  ABCBankTestTask
 //
-//  Created by Alice Versa on 09/02/2026.
+//  Created by Andrew Isaenko on 09/02/2026.
 //
 
 import UIKit
@@ -49,7 +49,7 @@ final class StatisticsViewController: UIViewController {
         stackView.addArrangedSubview(createSpacer(height: 16))
         
         // Page Stats
-        for pageStat in statistics.pageStats {
+        for pageStat in statistics.pagesStats {
             let label = createLabel(
                 text: "Page \(pageStat.pageNumber) (\(pageStat.itemCount) items)",
                 font: .systemFont(ofSize: 16)
@@ -65,7 +65,7 @@ final class StatisticsViewController: UIViewController {
         stackView.addArrangedSubview(charTitle)
         stackView.addArrangedSubview(createSpacer(height: 8))
         
-        for charStat in statistics.topCharacters {
+        for charStat in statistics.topCharactersStats {
             let label = createLabel(
                 text: "\(charStat.character) = \(charStat.count)",
                 font: .systemFont(ofSize: 16)

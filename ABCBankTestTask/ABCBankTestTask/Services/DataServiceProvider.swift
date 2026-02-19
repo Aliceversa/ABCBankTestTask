@@ -2,7 +2,7 @@
 //  DataServiceProvider.swift
 //  ABCBankTestTask
 //
-//  Created by Alice Versa on 09/02/2026.
+//  Created by Andrew Isaenko on 09/02/2026.
 //
 
 import Foundation

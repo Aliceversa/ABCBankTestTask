@@ -2,7 +2,7 @@
 //  ViewController.swift
 //  ABCBankTestTask
 //
-//  Created by Alice Versa on 09/02/2026.
+//  Created by Andrew Isaenko on 09/02/2026.
 //
 
 import UIKit
@@ -13,7 +13,7 @@ final class CarouselViewController: UIViewController {
     
     private var pages: [PageModel] = []
     private var currentItems: [String] = []
-    private var itemsListViewHeightConstraint: NSLayoutConstraint!
+    private var itemsListViewHeightConstraint: NSLayoutConstraint?
     
     // Containers
     private lazy var scrollView: UIScrollView = {
@@ -130,6 +130,7 @@ final class CarouselViewController: UIViewController {
     @objc private func dismissKeyboard() {
         view.endEditing(true)
     }
+    
 }
 
 // MARK: - CarouselViewControllerProtocol realisation
@@ -144,17 +145,17 @@ extension CarouselViewController: CarouselViewControllerProtocol {
     func displayCurrentPage(_ index: Int, items: [String]) {
         self.currentItems = items
         let height = CGFloat(items.count) * 60
-        itemsListViewHeightConstraint.constant = height
+        itemsListViewHeightConstraint?.constant = height
         itemsListView.reloadData()
     }
     
     func displayStatistics(_ statistics: StatisticsModel) {
-        let statsVC = StatisticsViewController(statistics: statistics)
-        if let sheet = statsVC.sheetPresentationController {
+        let statsViewController = StatisticsViewController(statistics: statistics)
+        if let sheet = statsViewController.sheetPresentationController {
             sheet.detents = [.medium()]
             sheet.prefersGrabberVisible = true
         }
-        present(statsVC, animated: true)
+        present(statsViewController, animated: true)
     }
     
 }
@@ -219,6 +220,7 @@ extension CarouselViewController: UIScrollViewDelegate {
 // MARK: - UITableView delegate & datasource (for the list of items)
 
 extension CarouselViewController: UITableViewDelegate, UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         currentItems.count
     }
@@ -238,6 +240,7 @@ extension CarouselViewController: UITableViewDelegate, UITableViewDataSource {
 // MARK: - UISearchBar delegate
 
 extension CarouselViewController: UISearchBarDelegate {
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         presenter.didSearch(searchText)
         
@@ -248,6 +251,7 @@ extension CarouselViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
     }
+    
 }
 
 // MARK: - Constraints Setup
@@ -328,7 +332,9 @@ extension CarouselViewController {
             itemsListView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             itemsListView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             itemsListView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20),
-            itemsListViewHeightConstraint
+            itemsListViewHeightConstraint ?? itemsListView.heightAnchor.constraint(
+                equalToConstant: CGFloat(currentItems.count) * 60
+            )
         ])
     }
     
