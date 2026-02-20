@@ -2,7 +2,7 @@
 //  SearchBarView.swift
 //  ABCBankTestTask
 //
-//  Created by Alice Versa on 12/02/2026.
+//  Created by Andrew Isaenko on 12/02/2026.
 //
 
 
@@ -36,4 +36,5 @@ struct SearchBarView: View {
         .padding(.horizontal)
         .frame(height: 56)
     }
+    
 }

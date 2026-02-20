@@ -2,12 +2,12 @@
 //  CarouselView.swift
 //  ABCBankTestTask
 //
-//  Created by Alice Versa on 12/02/2026.
+//  Created by Andrew Isaenko on 12/02/2026.
 //
 
 import SwiftUI
 
-struct CarouselView<ViewModel: CarouselViewModeling>: View {
+struct CarouselView<ViewModel: CarouselViewModelProtocol>: View {
     
     @ObservedObject var viewModel: ViewModel
     @State private var searchText: String = ""
@@ -93,4 +93,3 @@ extension CarouselView {
         .padding()
     }
 }
-

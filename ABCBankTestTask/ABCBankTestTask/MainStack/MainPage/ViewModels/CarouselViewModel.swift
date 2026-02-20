@@ -2,12 +2,12 @@
 //  CarouselViewModel.swift
 //  ABCBankTestTask
 //
-//  Created by Alice Versa on 12/02/2026.
+//  Created by Andrew Isaenko on 12/02/2026.
 //
 
 import Combine
 
-final class CarouselViewModel: CarouselViewModeling {
+final class CarouselViewModel: CarouselViewModelProtocol {
     
     @Published var pages: [PageModel] = []
     @Published var currentItems: [String] = []
@@ -74,4 +74,3 @@ final class CarouselViewModel: CarouselViewModeling {
     }
     
 }
-
