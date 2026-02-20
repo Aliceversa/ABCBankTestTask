@@ -54,19 +54,23 @@ final class CarouselPresenter {
 extension CarouselPresenter: CarouselPresenterProtocol {
     
     func viewDidLoad() {
-        dataService.fetchPages { [weak self] pages in
-            guard let self else { return }
-            
+        Task {
+            let pages = await dataService.fetchPages()
             self.pages = pages
-            self.viewController?.displayPages(pages)
+            
+            await MainActor.run {            
+                self.viewController?.displayPages(pages)
+            }
             
             if let firstPage = pages.first {
                 self.allItems = firstPage.items
-                self.viewController?.displayCurrentPage(0, items: firstPage.items)
+                await MainActor.run {
+                    self.viewController?.displayCurrentPage(0, items: firstPage.items)
+                }
             }
         }
     }
-    
+
     func didSelectPage(_ index: Int) {
         currentPageIndex = index
         allItems = pages[index].items

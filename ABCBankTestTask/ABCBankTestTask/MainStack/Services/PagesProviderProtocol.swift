@@ -6,5 +6,5 @@
 //
 
 protocol PagesProviderProtocol {
-    func fetchPages(completion: @escaping ([PageModel]) -> Void)
+    func fetchPages() async -> [PageModel]
 }

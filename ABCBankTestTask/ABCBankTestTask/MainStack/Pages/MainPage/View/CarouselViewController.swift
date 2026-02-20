@@ -50,12 +50,13 @@ final class CarouselViewController: UIViewController {
     private lazy var itemsListView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
         tableView.isScrollEnabled = false
-        tableView.dataSource = self
         tableView.delegate = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "ListItemCell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
+    
+    private var itemsListDataSource: UITableViewDiffableDataSource<Int, String>?
     
     // Searchbars
     private lazy var searchBarView: UISearchBar = {
@@ -108,6 +109,7 @@ final class CarouselViewController: UIViewController {
         setupAppearance()
         setupConstraints()
         setupKeyboardDismissGesture()
+        setupItemsListDataSource()
         presenter.viewDidLoad()
     }
     
@@ -131,6 +133,14 @@ final class CarouselViewController: UIViewController {
         view.endEditing(true)
     }
     
+    private func setupItemsListDataSource() {
+        itemsListDataSource = UITableViewDiffableDataSource<Int, String>(tableView: itemsListView) { tableView, indexPath, item in
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ListItemCell", for: indexPath)
+            cell.textLabel?.text = item
+            return cell
+        }
+    }
+    
 }
 
 // MARK: - CarouselViewControllerProtocol realisation
@@ -146,7 +156,11 @@ extension CarouselViewController: CarouselViewControllerProtocol {
         self.currentItems = items
         let height = CGFloat(items.count) * 60
         itemsListViewHeightConstraint?.constant = height
-        itemsListView.reloadData()
+        
+        var snapshot = NSDiffableDataSourceSnapshot<Int, String>()
+        snapshot.appendSections([0])
+        snapshot.appendItems(items)
+        itemsListDataSource?.apply(snapshot, animatingDifferences: false)
     }
     
     func displayStatistics(_ statistics: StatisticsModel) {
@@ -217,19 +231,9 @@ extension CarouselViewController: UIScrollViewDelegate {
     
 }
 
-// MARK: - UITableView delegate & datasource (for the list of items)
+// MARK: - UITableView delegate
 
-extension CarouselViewController: UITableViewDelegate, UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        currentItems.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ListItemCell", for: indexPath)
-        cell.textLabel?.text = currentItems[indexPath.row]
-        return cell
-    }
+extension CarouselViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
