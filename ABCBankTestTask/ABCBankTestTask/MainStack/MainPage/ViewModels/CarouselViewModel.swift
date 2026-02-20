@@ -21,13 +21,16 @@ final class CarouselViewModel: CarouselViewModelProtocol {
     }
     
     func loadData() {
-        dataService.fetchPages { [weak self] pages in
-            guard let self = self else { return }
-            self.pages = pages
+        Task {
+            let pages = await dataService.fetchPages()
             
-            if let firstPage = pages.first {
-                self.allItems = firstPage.items
-                self.currentItems = firstPage.items
+            await MainActor.run {
+                self.pages = pages
+                
+                if let firstPage = pages.first {
+                    self.allItems = firstPage.items
+                    self.currentItems = firstPage.items
+                }
             }
         }
     }
@@ -48,29 +51,27 @@ final class CarouselViewModel: CarouselViewModelProtocol {
     
     func getStatistics() -> StatisticsModel {
         // Get pages statistics (number and items count)
-        let pageStats = pages.enumerated().map { (index, page) in
-            (pageNumber: index + 1, itemCount: page.items.count)
+        let pageStats: [PageStat] = pages.enumerated().map { (index, page) in
+            PageStat(pageNumber: index + 1, itemCount: page.items.count)
         }
         
         // Calculate all characters (without spaces and symbols)
-        var characterCounts: [Character: Int] = [:]
-        for page in pages {
-            for item in page.items {
-                for char in item.lowercased() {
-                    if char.isLetter {
-                        characterCounts[char, default: 0] += 1
-                    }
-                }
-            }
-        }
+        let characterCounts: [Character: Int] = pages
+           .flatMap { $0.items }
+           .joined()
+           .lowercased()
+           .filter { $0.isLetter }
+           .reduce(into: [:]) { counts, char in
+               counts[char, default: 0] += 1
+           }
         
         // Get top 3 characters
-        let topCharacters = characterCounts
+        let topCharactersStats = characterCounts
             .sorted { $0.value > $1.value }
             .prefix(3)
-            .map { (character: $0.key, count: $0.value) }
+            .map { TopCharacterStat(character: $0.key, count: $0.value) }
         
-        return StatisticsModel(pageStats: pageStats, topCharacters: topCharacters)
+        return StatisticsModel(pagesStats: pageStats, topCharactersStats: topCharactersStats)
     }
     
 }

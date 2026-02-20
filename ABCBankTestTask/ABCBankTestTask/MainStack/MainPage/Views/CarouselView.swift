@@ -28,6 +28,7 @@ struct CarouselView<ViewModel: CarouselViewModelProtocol>: View {
                     }
                 }
             }
+            .scrollDismissesKeyboard(.immediately)
             
             fabButton
         }
@@ -35,6 +36,13 @@ struct CarouselView<ViewModel: CarouselViewModelProtocol>: View {
         .sheet(isPresented: $viewModel.isShowingStatistics) {
             StatisticsView(statistics: viewModel.getStatistics())
         }
+        .onTapGesture {
+            hideKeyboard()
+        }
+    }
+    
+    private func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
     
 }
@@ -48,7 +56,7 @@ extension CarouselView {
             ForEach(viewModel.pages.indices, id: \.self) { index in
                 Image(viewModel.pages[index].imageName)
                     .resizable()
-                    .scaledToFit()
+                    .scaledToFill()
                     .tag(index)
             }
         }

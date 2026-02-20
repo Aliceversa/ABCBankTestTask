@@ -9,22 +9,25 @@ import Foundation
 
 class DataServiceProvider: PagesProviderProtocol {
     
-    func fetchPages(completion: @escaping ([PageModel]) -> Void) {
-        let pages = [
+    func fetchPages() async -> [PageModel] {
+        
+        try? await Task.sleep(nanoseconds: 1_000_000_000)
+        
+        let pages: [PageModel] = [
             PageModel(
-                imageName: "motorcycle",
-                items: ["Harley-Davidson", "Yamaha", "Kawasaki", "Ducati", "Honda", "Suzuki", "BMW", "Triumph", "KTM", "Aprilia", "Yamaha2", "Kawasaki2", "Ducati2", "Honda2", "Suzuki2", "Kawasaki3", "Ducati3", "Honda3", "Suzuki3"]
+                imageName: ImageAssetsNames.motorcycleImageName,
+                items: PageModel.mockMotorcycles
             ),
             PageModel(
-                imageName: "furniture",
-                items: ["chair", "sofa", "table", "bed", "desk", "lamp", "wardrobe"]
+                imageName: ImageAssetsNames.furnitureImageName,
+                items: PageModel.mockFurniture
             ),
             PageModel(
-                imageName: "fruits",
-                items: ["apple", "orange", "banana", "strawberry", "pineapple", "grapes", "raspberries", "watermelon", "apple2"]
+                imageName: ImageAssetsNames.fruitsImageName,
+                items: PageModel.mockFruits
             ),
         ]
-        completion(pages)
+        return pages
     }
     
 }

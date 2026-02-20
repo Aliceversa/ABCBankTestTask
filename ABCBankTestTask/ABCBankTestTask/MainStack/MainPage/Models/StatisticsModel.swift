@@ -6,6 +6,16 @@
 //
 
 struct StatisticsModel {
-    let pageStats: [(pageNumber: Int, itemCount: Int)]
-    let topCharacters: [(character: Character, count: Int)]
+    let pagesStats: [PageStat]
+    let topCharactersStats: [TopCharacterStat]
+}
+
+struct PageStat {
+    let pageNumber: Int
+    let itemCount: Int
+}
+
+struct TopCharacterStat {
+    let character: Character
+    let count: Int
 }

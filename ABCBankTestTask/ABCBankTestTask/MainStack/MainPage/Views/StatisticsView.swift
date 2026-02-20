@@ -5,7 +5,6 @@
 //  Created by Andrew Isaenko on 12/02/2026.
 //
 
-
 import SwiftUI
 
 struct StatisticsView: View {
@@ -21,7 +20,7 @@ struct StatisticsView: View {
                     .bold()
                 
                 VStack(alignment: .leading, spacing: 8) {
-                    ForEach(statistics.pageStats, id: \.pageNumber) { pageStat in
+                    ForEach(statistics.pagesStats, id: \.pageNumber) { pageStat in
                         Text("Page \(pageStat.pageNumber) (\(pageStat.itemCount) items)")
                             .font(.body)
                     }
@@ -35,7 +34,7 @@ struct StatisticsView: View {
                     Text("Top 3 Characters")
                         .font(.headline)
                     
-                    ForEach(statistics.topCharacters, id: \.character) { charStat in
+                    ForEach(statistics.topCharactersStats, id: \.character) { charStat in
                         Text("\(String(charStat.character)) = \(charStat.count)")
                             .font(.body)
                     }
