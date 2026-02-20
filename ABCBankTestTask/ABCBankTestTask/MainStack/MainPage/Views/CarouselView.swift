@@ -56,7 +56,7 @@ extension CarouselView {
             ForEach(viewModel.pages.indices, id: \.self) { index in
                 Image(viewModel.pages[index].imageName)
                     .resizable()
-                    .scaledToFill()
+                    .scaledToFit()
                     .tag(index)
             }
         }
