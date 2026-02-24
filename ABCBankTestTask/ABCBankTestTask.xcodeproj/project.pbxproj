@@ -6,7 +6,18 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		18C40DC42F4DD76F0005A231 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 18E129372F39500000191E1B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 18E1293E2F39500000191E1B;
+			remoteInfo = ABCBankTestTask;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		18C40DC02F4DD76F0005A231 /* ABCBankTestTaskTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ABCBankTestTaskTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		18E1293F2F39500000191E1B /* ABCBankTestTask.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ABCBankTestTask.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -21,6 +32,11 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		18C40DC12F4DD76F0005A231 /* ABCBankTestTaskTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ABCBankTestTaskTests;
+			sourceTree = "<group>";
+		};
 		18E129412F39500000191E1B /* ABCBankTestTask */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -32,6 +48,13 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		18C40DBD2F4DD76F0005A231 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		18E1293C2F39500000191E1B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -46,6 +69,7 @@
 			isa = PBXGroup;
 			children = (
 				18E129412F39500000191E1B /* ABCBankTestTask */,
+				18C40DC12F4DD76F0005A231 /* ABCBankTestTaskTests */,
 				18E129402F39500000191E1B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -54,6 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				18E1293F2F39500000191E1B /* ABCBankTestTask.app */,
+				18C40DC02F4DD76F0005A231 /* ABCBankTestTaskTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -61,6 +86,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		18C40DBF2F4DD76F0005A231 /* ABCBankTestTaskTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 18C40DC82F4DD76F0005A231 /* Build configuration list for PBXNativeTarget "ABCBankTestTaskTests" */;
+			buildPhases = (
+				18C40DBC2F4DD76F0005A231 /* Sources */,
+				18C40DBD2F4DD76F0005A231 /* Frameworks */,
+				18C40DBE2F4DD76F0005A231 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				18C40DC52F4DD76F0005A231 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				18C40DC12F4DD76F0005A231 /* ABCBankTestTaskTests */,
+			);
+			name = ABCBankTestTaskTests;
+			packageProductDependencies = (
+			);
+			productName = ABCBankTestTaskTests;
+			productReference = 18C40DC02F4DD76F0005A231 /* ABCBankTestTaskTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		18E1293E2F39500000191E1B /* ABCBankTestTask */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 18E129522F39500200191E1B /* Build configuration list for PBXNativeTarget "ABCBankTestTask" */;
@@ -93,6 +141,10 @@
 				LastSwiftUpdateCheck = 1640;
 				LastUpgradeCheck = 1640;
 				TargetAttributes = {
+					18C40DBF2F4DD76F0005A231 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 18E1293E2F39500000191E1B;
+					};
 					18E1293E2F39500000191E1B = {
 						CreatedOnToolsVersion = 16.4;
 					};
@@ -113,11 +165,19 @@
 			projectRoot = "";
 			targets = (
 				18E1293E2F39500000191E1B /* ABCBankTestTask */,
+				18C40DBF2F4DD76F0005A231 /* ABCBankTestTaskTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		18C40DBE2F4DD76F0005A231 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		18E1293D2F39500000191E1B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -128,6 +188,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		18C40DBC2F4DD76F0005A231 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		18E1293B2F39500000191E1B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -137,7 +204,49 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		18C40DC52F4DD76F0005A231 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 18E1293E2F39500000191E1B /* ABCBankTestTask */;
+			targetProxy = 18C40DC42F4DD76F0005A231 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		18C40DC62F4DD76F0005A231 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = alamakota.ABCBankTestTaskTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ABCBankTestTask.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ABCBankTestTask";
+			};
+			name = Debug;
+		};
+		18C40DC72F4DD76F0005A231 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = alamakota.ABCBankTestTaskTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ABCBankTestTask.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ABCBankTestTask";
+			};
+			name = Release;
+		};
 		18E129532F39500200191E1B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -314,6 +423,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		18C40DC82F4DD76F0005A231 /* Build configuration list for PBXNativeTarget "ABCBankTestTaskTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				18C40DC62F4DD76F0005A231 /* Debug */,
+				18C40DC72F4DD76F0005A231 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		18E1293A2F39500000191E1B /* Build configuration list for PBXProject "ABCBankTestTask" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
