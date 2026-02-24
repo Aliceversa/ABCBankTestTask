@@ -1,5 +1,5 @@
 //
-//  MockDataServiceProvider.swift
+//  MockPagesProvider.swift
 //  ABCBankTestTask
 //
 //  Created by Alice Versa on 12/02/2026.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-class MockDataServiceProvider: PagesProviderProtocol {
+class MockPagesProvider: PagesProviderProtocol {
     
     func fetchPages() async -> [PageModel] {
         

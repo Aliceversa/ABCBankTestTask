@@ -13,16 +13,16 @@ final class MainPageViewModel: MainPageViewModelProtocol {
     @Published var currentItems: [String] = []
     @Published var isShowingStatistics: Bool = false
     
-    private let dataService: PagesProviderProtocol
+    private let pagesProvider: PagesProviderProtocol
     private var allItems: [String] = []
     
-    init(dataService: PagesProviderProtocol) {
-        self.dataService = dataService
+    init(pagesProvider: PagesProviderProtocol) {
+        self.pagesProvider = pagesProvider
     }
     
     func loadData() {
         Task {
-            let pages = await dataService.fetchPages()
+            let pages = await pagesProvider.fetchPages()
             
             await MainActor.run {
                 self.pages = pages
