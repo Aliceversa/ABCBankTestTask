@@ -1,5 +1,5 @@
 //
-//  MainViewModelProtocol.swift
+//  MainPageViewModelProtocol.swift
 //  ABCBankTestTask
 //
 //  Created by Andrew Isaenko on 12/02/2026.
@@ -7,7 +7,7 @@
 
 import Combine
 
-protocol CarouselViewModelProtocol: ObservableObject {
+protocol MainPageViewModelProtocol: ObservableObject {
     var pages: [PageModel] { get }
     var currentItems: [String] { get }
     var isShowingStatistics: Bool { get set }

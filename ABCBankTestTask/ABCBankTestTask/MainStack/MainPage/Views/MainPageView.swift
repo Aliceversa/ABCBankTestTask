@@ -1,5 +1,5 @@
 //
-//  CarouselView.swift
+//  MainPageView.swift
 //  ABCBankTestTask
 //
 //  Created by Andrew Isaenko on 12/02/2026.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CarouselView<ViewModel: CarouselViewModelProtocol>: View {
+struct MainPageView<ViewModel: MainPageViewModelProtocol>: View {
     
     @ObservedObject var viewModel: ViewModel
     @State private var searchText: String = ""
@@ -49,7 +49,7 @@ struct CarouselView<ViewModel: CarouselViewModelProtocol>: View {
 
 // MARK: - Components
 
-extension CarouselView {
+extension MainPageView {
     
     private var imagesCarousel: some View {
         TabView(selection: $selectedPageIndex) {

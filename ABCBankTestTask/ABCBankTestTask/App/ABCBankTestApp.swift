@@ -12,7 +12,7 @@ struct ABCBankTestTaskApp: App {
     
     var body: some Scene {
         WindowGroup {
-            CarouselView(viewModel: CarouselViewModel())
+            MainPageBuilder().build()
         }
     }
     

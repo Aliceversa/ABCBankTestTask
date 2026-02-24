@@ -1,5 +1,5 @@
 //
-//  CarouselViewModel.swift
+//  MainPageViewModel.swift
 //  ABCBankTestTask
 //
 //  Created by Andrew Isaenko on 12/02/2026.
@@ -7,7 +7,7 @@
 
 import Combine
 
-final class CarouselViewModel: CarouselViewModelProtocol {
+final class MainPageViewModel: MainPageViewModelProtocol {
     
     @Published var pages: [PageModel] = []
     @Published var currentItems: [String] = []
@@ -16,7 +16,7 @@ final class CarouselViewModel: CarouselViewModelProtocol {
     private let dataService: PagesProviderProtocol
     private var allItems: [String] = []
     
-    init(dataService: PagesProviderProtocol = DataServiceProvider()) {
+    init(dataService: PagesProviderProtocol) {
         self.dataService = dataService
     }
     
