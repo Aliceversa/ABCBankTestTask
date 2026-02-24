@@ -1,13 +1,13 @@
 //
-//  MainPresenter.swift
+//  MainPagePresenter.swift
 //  ABCBankTestTask
 //
 //  Created by Andrew Isaenko on 09/02/2026.
 //
 
-final class CarouselPresenter {
+final class MainPagePresenter {
     
-    private weak var viewController: CarouselViewControllerProtocol?
+    private weak var viewController: MainPageViewControllerProtocol?
     private let dataService: PagesProviderProtocol
     
     private var pages: [PageModel] = []
@@ -18,7 +18,7 @@ final class CarouselPresenter {
         self.dataService = dataService
     }
     
-    public func setViewController(_ viewController: CarouselViewControllerProtocol) {
+    public func setViewController(_ viewController: MainPageViewControllerProtocol) {
         self.viewController = viewController
     }
     
@@ -51,7 +51,7 @@ final class CarouselPresenter {
 
 // MARK: - CarouselPresenterProtocol realisation
 
-extension CarouselPresenter: CarouselPresenterProtocol {
+extension MainPagePresenter: MainPagePresenterProtocol {
     
     func viewDidLoad() {
         Task {

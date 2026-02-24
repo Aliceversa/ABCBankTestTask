@@ -1,5 +1,5 @@
 //
-//  DataServiceProtocol.swift
+//  PagesProviderProtocol.swift
 //  ABCBankTestTask
 //
 //  Created by Andrew Isaenko on 09/02/2026.

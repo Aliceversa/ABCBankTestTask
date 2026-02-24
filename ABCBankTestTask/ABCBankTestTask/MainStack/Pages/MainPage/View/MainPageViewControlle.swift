@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MainPageViewControlle.swift
 //  ABCBankTestTask
 //
 //  Created by Andrew Isaenko on 09/02/2026.
@@ -7,9 +7,9 @@
 
 import UIKit
 
-final class CarouselViewController: UIViewController {
+final class MainPageViewControlle: UIViewController {
 
-    var presenter: CarouselPresenterProtocol
+    var presenter: MainPagePresenterProtocol
     
     private var pages: [PageModel] = []
     private var currentItems: [String] = []
@@ -95,7 +95,7 @@ final class CarouselViewController: UIViewController {
     
     // MARK: Lyfecycle
     
-    init(presenter: CarouselPresenterProtocol) {
+    init(presenter: MainPagePresenterProtocol) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }
@@ -145,7 +145,7 @@ final class CarouselViewController: UIViewController {
 
 // MARK: - CarouselViewControllerProtocol realisation
 
-extension CarouselViewController: CarouselViewControllerProtocol {
+extension MainPageViewControlle: MainPageViewControllerProtocol {
     
     func displayPages(_ pages: [PageModel]) {
         self.pages = pages
@@ -176,7 +176,7 @@ extension CarouselViewController: CarouselViewControllerProtocol {
 
 // MARK: - CollectionView delegate & datasource (For the carousel)
 
-extension CarouselViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension MainPageViewControlle: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         pages.count
@@ -211,7 +211,7 @@ extension CarouselViewController: UICollectionViewDelegate, UICollectionViewData
 
 // MARK: - UIScrollViewDelegate (for sticky search bar)
 
-extension CarouselViewController: UIScrollViewDelegate {
+extension MainPageViewControlle: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard scrollView == self.scrollView else { return }
@@ -233,7 +233,7 @@ extension CarouselViewController: UIScrollViewDelegate {
 
 // MARK: - UITableView delegate
 
-extension CarouselViewController: UITableViewDelegate {
+extension MainPageViewControlle: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
@@ -243,7 +243,7 @@ extension CarouselViewController: UITableViewDelegate {
 
 // MARK: - UISearchBar delegate
 
-extension CarouselViewController: UISearchBarDelegate {
+extension MainPageViewControlle: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         presenter.didSearch(searchText)
@@ -260,7 +260,7 @@ extension CarouselViewController: UISearchBarDelegate {
 
 // MARK: - Constraints Setup
 
-extension CarouselViewController {
+extension MainPageViewControlle {
     
     private func setupConstraints() {
         view.addSubview(scrollView)
