@@ -69,10 +69,17 @@ extension MainPageView {
     }
     
     private var searchBar: some View {
-        SearchBarView(text: $searchText)
-            .onChange(of: searchText) { _, newValue in
-                viewModel.search(newValue)
-            }
+        VStack(spacing: 0) {
+            Divider()
+            
+            SearchBarView(text: $searchText)
+                .onChange(of: searchText) { _, newValue in
+                    viewModel.search(newValue)
+                }
+            
+            Divider()
+        }
+        .background(.white)
     }
     
     private var itemsList: some View {
@@ -83,6 +90,9 @@ extension MainPageView {
                     .frame(height: 60)
                     .padding(.horizontal, 16)
                     .background(Color(.systemBackground))
+                
+                Divider()
+                    .padding(.leading, 16)
             }
         }
     }
