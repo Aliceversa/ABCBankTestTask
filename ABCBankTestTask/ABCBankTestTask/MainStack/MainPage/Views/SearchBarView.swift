@@ -13,7 +13,7 @@ struct SearchBarView: View {
     
     var body: some View {
         HStack {
-            Image(systemName: "magnifyingglass")
+            Image(systemName: SystemImageAssets.magnifyingGlass)
                 .foregroundColor(.gray)
             
             TextField("Search items...", text: $text)
@@ -24,7 +24,7 @@ struct SearchBarView: View {
                 Button(action: {
                     text = ""
                 }) {
-                    Image(systemName: "xmark.circle.fill")
+                    Image(systemName: SystemImageAssets.xmarkCircleFill)
                         .foregroundColor(.gray)
                 }
             }
