@@ -13,11 +13,16 @@ final class MainPagePresenter {
     private var pages: [PageModel] = []
     private var currentPageIndex: Int = 0
     private var allItems: [String] = []
-    
     private var cachedStatistics: StatisticsModel?
+    
+    private var loadDataTask: Task<Void, Never>?
     
     init(pagesProvider: PagesProviderProtocol) {
         self.pagesProvider = pagesProvider
+    }
+    
+    deinit {
+        loadDataTask?.cancel()
     }
     
     public func setViewController(_ viewController: MainPageViewControllerProtocol) {
@@ -25,10 +30,12 @@ final class MainPagePresenter {
     }
     
     private func calculateAndCacheStatistics() async {
-        let statistics = await Task.detached {
-            self.calculateStatistics()
+        let statistics = await Task.detached { [weak self] in
+            guard let self, !Task.isCancelled else { return StatisticsModel(pagesStats: [], topCharactersStats: [])}
+            return self.calculateStatistics()
         }.value
         
+        guard !Task.isCancelled else { return }
         cachedStatistics = statistics
     }
     
@@ -64,22 +71,29 @@ final class MainPagePresenter {
 extension MainPagePresenter: MainPagePresenterProtocol {
     
     func viewDidLoad() {
-        Task {
+        loadDataTask?.cancel()
+        
+        loadDataTask = Task { [weak self] in
+            guard let self else { return }
+            
             let pages = await pagesProvider.fetchPages()
             self.pages = pages
             
-            await MainActor.run {            
-                self.viewController?.displayPages(pages)
+            guard !Task.isCancelled else { return }
+            await MainActor.run { [weak self] in
+                self?.viewController?.displayPages(pages)
             }
             
             if let firstPage = pages.first {
                 self.allItems = firstPage.items
-                await MainActor.run {
-                    self.viewController?.displayCurrentPage(0, items: firstPage.items)
+                await MainActor.run { [weak self] in
+                    guard !Task.isCancelled else { return }
+                    self?.viewController?.displayCurrentPage(0, items: firstPage.items)
                 }
             }
-            
-            // Calculate statistics in background when the view loads
+
+            // Check if the task is cancelled and calculate statistics in background when the view loads
+            guard !Task.isCancelled else { return }
             await calculateAndCacheStatistics()
         }
     }
@@ -100,7 +114,7 @@ extension MainPagePresenter: MainPagePresenterProtocol {
     }
     
     func didTapStatistics() {
-        guard let cachedStatistics else  { return}
+        guard let cachedStatistics else { return}
         viewController?.displayStatistics(cachedStatistics)
     }
     
