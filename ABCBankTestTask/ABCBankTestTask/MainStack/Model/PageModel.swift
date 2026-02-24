@@ -5,7 +5,7 @@
 //  Created by Andrew Isaenko on 09/02/2026.
 //
 
-struct PageModel {
+struct PageModel: Hashable {
     let imageName: String
     let items: [String]
 }

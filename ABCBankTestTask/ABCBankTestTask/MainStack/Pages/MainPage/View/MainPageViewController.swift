@@ -38,9 +38,8 @@ final class MainPageViewController: UIViewController {
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
         collectionView.isPagingEnabled = true
-        collectionView.showsHorizontalScrollIndicator = false
-        collectionView.dataSource = self
         collectionView.delegate = self
+        collectionView.showsHorizontalScrollIndicator = false
         collectionView.register(CarouselCell.self, forCellWithReuseIdentifier: CarouselCell.reuseId)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
@@ -57,6 +56,7 @@ final class MainPageViewController: UIViewController {
     }()
     
     private var itemsListDataSource: UITableViewDiffableDataSource<Int, String>?
+    private var imagesCarouselDataSource: UICollectionViewDiffableDataSource<Int, PageModel>?
     
     // Searchbars
     private lazy var searchBarView: UISearchBar = {
@@ -110,6 +110,7 @@ final class MainPageViewController: UIViewController {
         setupConstraints()
         setupKeyboardDismissGesture()
         setupItemsListDataSource()
+        setupImagesCarouselDataSource()
         presenter.viewDidLoad()
     }
     
@@ -141,6 +142,19 @@ final class MainPageViewController: UIViewController {
         }
     }
     
+    private func setupImagesCarouselDataSource() {
+        imagesCarouselDataSource = UICollectionViewDiffableDataSource<Int, PageModel>(collectionView: carouselView) { collectionView, indexPath, page in
+            guard let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: CarouselCell.reuseId,
+                for: indexPath
+            ) as? CarouselCell else {
+                return UICollectionViewCell()
+            }
+            cell.configureWith(imageName: page.imageName)
+            return cell
+        }
+    }
+    
 }
 
 // MARK: - CarouselViewControllerProtocol realisation
@@ -149,7 +163,11 @@ extension MainPageViewController: MainPageViewControllerProtocol {
     
     func displayPages(_ pages: [PageModel]) {
         self.pages = pages
-        carouselView.reloadData()
+        
+        var snapshot = NSDiffableDataSourceSnapshot<Int, PageModel>()
+        snapshot.appendSections([0])
+        snapshot.appendItems(pages)
+        imagesCarouselDataSource?.apply(snapshot, animatingDifferences: false)
     }
     
     func displayCurrentPage(_ index: Int, items: [String]) {
@@ -174,27 +192,9 @@ extension MainPageViewController: MainPageViewControllerProtocol {
     
 }
 
-// MARK: - CollectionView delegate & datasource (For the carousel)
+// MARK: - CollectionView delegate flow layout
 
-extension MainPageViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        pages.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: CarouselCell.reuseId,
-            for: indexPath
-        ) as? CarouselCell else {
-            return UICollectionViewCell()
-        }
-        
-        let imageName = pages[indexPath.row].imageName
-        cell.configureWith(imageName: imageName)
-        
-        return cell
-    }
+extension MainPageViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return collectionView.bounds.size
