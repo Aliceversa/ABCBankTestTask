@@ -14,18 +14,25 @@ final class MainPageViewModel: MainPageViewModelProtocol {
     
     private let pagesProvider: PagesProviderProtocol
     private var allItems: [String] = []
-    
     private var cachedStatistics: StatisticsModel?
+    
+    private var loadDataTask: Task<Void, Never>?
     
     init(pagesProvider: PagesProviderProtocol) {
         self.pagesProvider = pagesProvider
     }
     
+    deinit {
+        loadDataTask?.cancel()
+    }
+    
     private func calculateAndCacheStatistics() async {
-        let statistics = await Task.detached {
-            self.calculateStatistics()
+        let statistics = await Task.detached { [weak self] in
+            guard let self, !Task.isCancelled else { return StatisticsModel(pagesStats: [], topCharactersStats: []) }
+            return self.calculateStatistics()
         }.value
         
+        guard !Task.isCancelled else { return }
         cachedStatistics = statistics
     }
     
@@ -59,10 +66,18 @@ final class MainPageViewModel: MainPageViewModelProtocol {
 extension MainPageViewModel {
     
     func loadData() {
-        Task {
+        
+        // Cancel previous task if exists
+        loadDataTask?.cancel()
+        
+        loadDataTask = Task { [weak self] in
+            guard let self else { return }
             let pages = await pagesProvider.fetchPages()
             
-            await MainActor.run {
+            guard !Task.isCancelled else { return }
+            
+            await MainActor.run { [weak self] in
+                guard let self else { return }
                 self.pages = pages
                 
                 if let firstPage = pages.first {
@@ -70,7 +85,8 @@ extension MainPageViewModel {
                     self.currentItems = firstPage.items
                 }
             }
-                        
+            
+            guard !Task.isCancelled else { return }
             await calculateAndCacheStatistics()
         }
     }
