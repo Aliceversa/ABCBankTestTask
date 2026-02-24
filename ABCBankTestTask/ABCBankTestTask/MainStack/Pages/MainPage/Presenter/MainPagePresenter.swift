@@ -14,7 +14,7 @@ final class MainPagePresenter {
     private var currentPageIndex: Int = 0
     private var allItems: [String] = []
     
-    init(dataService: PagesProviderProtocol = DataServiceProvider()) {
+    init(dataService: PagesProviderProtocol) {
         self.dataService = dataService
     }
     

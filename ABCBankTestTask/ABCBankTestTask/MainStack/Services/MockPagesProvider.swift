@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class MockDataServiceProvider: PagesProviderProtocol {
+class MockPagesProvider: PagesProviderProtocol {
     
     func fetchPages() async -> [PageModel] {
         
