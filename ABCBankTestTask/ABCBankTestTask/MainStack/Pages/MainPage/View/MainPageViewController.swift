@@ -49,6 +49,7 @@ final class MainPageViewController: UIViewController {
     private lazy var itemsListView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
         tableView.isScrollEnabled = false
+        tableView.allowsSelection = false
         tableView.delegate = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "ListItemCell")
         tableView.translatesAutoresizingMaskIntoConstraints = false

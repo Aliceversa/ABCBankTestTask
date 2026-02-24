@@ -14,12 +14,22 @@ final class MainPagePresenter {
     private var currentPageIndex: Int = 0
     private var allItems: [String] = []
     
+    private var cachedStatistics: StatisticsModel?
+    
     init(pagesProvider: PagesProviderProtocol) {
         self.pagesProvider = pagesProvider
     }
     
     public func setViewController(_ viewController: MainPageViewControllerProtocol) {
         self.viewController = viewController
+    }
+    
+    private func calculateAndCacheStatistics() async {
+        let statistics = await Task.detached {
+            self.calculateStatistics()
+        }.value
+        
+        cachedStatistics = statistics
     }
     
     private func calculateStatistics() -> StatisticsModel {
@@ -68,6 +78,9 @@ extension MainPagePresenter: MainPagePresenterProtocol {
                     self.viewController?.displayCurrentPage(0, items: firstPage.items)
                 }
             }
+            
+            // Calculate statistics in background when the view loads
+            await calculateAndCacheStatistics()
         }
     }
 
@@ -87,8 +100,8 @@ extension MainPagePresenter: MainPagePresenterProtocol {
     }
     
     func didTapStatistics() {
-        let statistics = calculateStatistics()
-        viewController?.displayStatistics(statistics)
+        guard let cachedStatistics else  { return}
+        viewController?.displayStatistics(cachedStatistics)
     }
     
 }
