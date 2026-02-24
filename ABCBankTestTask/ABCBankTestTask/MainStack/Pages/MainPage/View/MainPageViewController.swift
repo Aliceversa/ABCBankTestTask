@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class MainPageViewControlle: UIViewController {
+final class MainPageViewController: UIViewController {
 
     var presenter: MainPagePresenterProtocol
     
@@ -145,7 +145,7 @@ final class MainPageViewControlle: UIViewController {
 
 // MARK: - CarouselViewControllerProtocol realisation
 
-extension MainPageViewControlle: MainPageViewControllerProtocol {
+extension MainPageViewController: MainPageViewControllerProtocol {
     
     func displayPages(_ pages: [PageModel]) {
         self.pages = pages
@@ -176,7 +176,7 @@ extension MainPageViewControlle: MainPageViewControllerProtocol {
 
 // MARK: - CollectionView delegate & datasource (For the carousel)
 
-extension MainPageViewControlle: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension MainPageViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         pages.count
@@ -211,7 +211,7 @@ extension MainPageViewControlle: UICollectionViewDelegate, UICollectionViewDataS
 
 // MARK: - UIScrollViewDelegate (for sticky search bar)
 
-extension MainPageViewControlle: UIScrollViewDelegate {
+extension MainPageViewController: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard scrollView == self.scrollView else { return }
@@ -233,7 +233,7 @@ extension MainPageViewControlle: UIScrollViewDelegate {
 
 // MARK: - UITableView delegate
 
-extension MainPageViewControlle: UITableViewDelegate {
+extension MainPageViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
@@ -243,7 +243,7 @@ extension MainPageViewControlle: UITableViewDelegate {
 
 // MARK: - UISearchBar delegate
 
-extension MainPageViewControlle: UISearchBarDelegate {
+extension MainPageViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         presenter.didSearch(searchText)
@@ -260,7 +260,7 @@ extension MainPageViewControlle: UISearchBarDelegate {
 
 // MARK: - Constraints Setup
 
-extension MainPageViewControlle {
+extension MainPageViewController {
     
     private func setupConstraints() {
         view.addSubview(scrollView)

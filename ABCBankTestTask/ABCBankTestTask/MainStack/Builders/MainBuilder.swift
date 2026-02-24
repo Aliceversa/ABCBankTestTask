@@ -12,7 +12,7 @@ final class MainBuilder {
     func build() -> UIViewController {
         let pagesProvider = MockPagesProvider()
         let presenter = MainPagePresenter(pagesProvider: pagesProvider)
-        let mainViewController = MainPageViewControlle(presenter: presenter)
+        let mainViewController = MainPageViewController(presenter: presenter)
         presenter.setViewController(mainViewController)
         
         return mainViewController
