@@ -10,7 +10,7 @@ import SwiftUI
 final class MainPageBuilder {
     
     func build() -> some View {
-        let dataService = DataServiceProvider()
+        let dataService = MockDataServiceProvider()
         let viewModel = MainPageViewModel(dataService: dataService)
         return MainPageView(viewModel: viewModel)
     }
