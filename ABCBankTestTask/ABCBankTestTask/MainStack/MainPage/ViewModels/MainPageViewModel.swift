@@ -11,7 +11,6 @@ final class MainPageViewModel: MainPageViewModelProtocol {
     
     @Published var pages: [PageModel] = []
     @Published var currentItems: [String] = []
-    @Published var isShowingStatistics: Bool = false
     
     private let pagesProvider: PagesProviderProtocol
     private var allItems: [String] = []

@@ -10,7 +10,6 @@ import Combine
 protocol MainPageViewModelProtocol: ObservableObject {
     var pages: [PageModel] { get }
     var currentItems: [String] { get }
-    var isShowingStatistics: Bool { get set }
     
     func loadData()
     func selectPage(_ index: Int)

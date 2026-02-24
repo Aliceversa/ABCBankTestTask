@@ -12,6 +12,7 @@ struct MainPageView<ViewModel: MainPageViewModelProtocol>: View {
     @ObservedObject var viewModel: ViewModel
     @State private var searchText: String = ""
     @State private var selectedPageIndex: Int = 0
+    @State private var isShowingStatistics: Bool = false
         
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
@@ -33,7 +34,7 @@ struct MainPageView<ViewModel: MainPageViewModelProtocol>: View {
             fabButton
         }
         .onAppear(perform: viewModel.loadData)
-        .sheet(isPresented: $viewModel.isShowingStatistics) {
+        .sheet(isPresented: $isShowingStatistics) {
             StatisticsView(statistics: viewModel.getStatistics())
         }
         .onTapGesture {
@@ -88,7 +89,7 @@ extension MainPageView {
     
     private var fabButton: some View {
         Button(action: {
-            viewModel.isShowingStatistics = true
+            isShowingStatistics = true
         }) {
             Text("📊")
                 .font(.system(size: 30))
