@@ -1,5 +1,5 @@
 //
-//  DataServiceProvider.swift
+//  MockPagesProvider.swift
 //  ABCBankTestTask
 //
 //  Created by Andrew Isaenko on 09/02/2026.

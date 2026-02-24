@@ -10,8 +10,8 @@ import UIKit
 final class MainBuilder {
     
     func build() -> UIViewController {
-        let dataService = MockPagesProvider()
-        let presenter = MainPagePresenter(dataService: dataService)
+        let pagesProvider = MockPagesProvider()
+        let presenter = MainPagePresenter(pagesProvider: pagesProvider)
         let mainViewController = MainPageViewControlle(presenter: presenter)
         presenter.setViewController(mainViewController)
         

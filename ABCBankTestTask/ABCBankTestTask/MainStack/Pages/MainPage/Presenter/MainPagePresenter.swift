@@ -8,14 +8,14 @@
 final class MainPagePresenter {
     
     private weak var viewController: MainPageViewControllerProtocol?
-    private let dataService: PagesProviderProtocol
+    private let pagesProvider: PagesProviderProtocol
     
     private var pages: [PageModel] = []
     private var currentPageIndex: Int = 0
     private var allItems: [String] = []
     
-    init(dataService: PagesProviderProtocol) {
-        self.dataService = dataService
+    init(pagesProvider: PagesProviderProtocol) {
+        self.pagesProvider = pagesProvider
     }
     
     public func setViewController(_ viewController: MainPageViewControllerProtocol) {
@@ -55,7 +55,7 @@ extension MainPagePresenter: MainPagePresenterProtocol {
     
     func viewDidLoad() {
         Task {
-            let pages = await dataService.fetchPages()
+            let pages = await pagesProvider.fetchPages()
             self.pages = pages
             
             await MainActor.run {            
