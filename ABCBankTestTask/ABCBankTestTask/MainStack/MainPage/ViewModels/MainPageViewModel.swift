@@ -15,40 +15,21 @@ final class MainPageViewModel: MainPageViewModelProtocol {
     private let pagesProvider: PagesProviderProtocol
     private var allItems: [String] = []
     
+    private var cachedStatistics: StatisticsModel?
+    
     init(pagesProvider: PagesProviderProtocol) {
         self.pagesProvider = pagesProvider
     }
     
-    func loadData() {
-        Task {
-            let pages = await pagesProvider.fetchPages()
-            
-            await MainActor.run {
-                self.pages = pages
-                
-                if let firstPage = pages.first {
-                    self.allItems = firstPage.items
-                    self.currentItems = firstPage.items
-                }
-            }
-        }
+    private func calculateAndCacheStatistics() async {
+        let statistics = await Task.detached {
+            self.calculateStatistics()
+        }.value
+        
+        cachedStatistics = statistics
     }
     
-    func selectPage(_ index: Int) {
-        guard index < pages.count else { return }
-        allItems = pages[index].items
-        currentItems = allItems
-    }
-    
-    func search(_ text: String) {
-        if text.isEmpty {
-            currentItems = allItems
-        } else {
-            currentItems = allItems.filter { $0.lowercased().contains(text.lowercased()) }
-        }
-    }
-    
-    func getStatistics() -> StatisticsModel {
+    private func calculateStatistics() -> StatisticsModel {
         // Get pages statistics (number and items count)
         let pageStats: [PageStat] = pages.enumerated().map { (index, page) in
             PageStat(pageNumber: index + 1, itemCount: page.items.count)
@@ -71,6 +52,45 @@ final class MainPageViewModel: MainPageViewModelProtocol {
             .map { TopCharacterStat(character: $0.key, count: $0.value) }
         
         return StatisticsModel(pagesStats: pageStats, topCharactersStats: topCharactersStats)
+    }
+    
+}
+
+extension MainPageViewModel {
+    
+    func loadData() {
+        Task {
+            let pages = await pagesProvider.fetchPages()
+            
+            await MainActor.run {
+                self.pages = pages
+                
+                if let firstPage = pages.first {
+                    self.allItems = firstPage.items
+                    self.currentItems = firstPage.items
+                }
+            }
+                        
+            await calculateAndCacheStatistics()
+        }
+    }
+    
+    func selectPage(_ index: Int) {
+        guard index < pages.count else { return }
+        allItems = pages[index].items
+        currentItems = allItems
+    }
+    
+    func search(_ text: String) {
+        if text.isEmpty {
+            currentItems = allItems
+        } else {
+            currentItems = allItems.filter { $0.lowercased().contains(text.lowercased()) }
+        }
+    }
+    
+    func getStatistics() -> StatisticsModel {
+        return cachedStatistics ?? StatisticsModel(pagesStats: [], topCharactersStats: [])
     }
     
 }
