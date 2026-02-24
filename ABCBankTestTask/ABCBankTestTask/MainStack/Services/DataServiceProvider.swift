@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class DataServiceProvider: PagesProviderProtocol {
+class MockDataServiceProvider: PagesProviderProtocol {
     
     func fetchPages() async -> [PageModel] {
         
@@ -17,15 +17,28 @@ class DataServiceProvider: PagesProviderProtocol {
         let pages: [PageModel] = [
             PageModel(
                 imageName: ImageAssetsNames.motorcycleImageName,
-                items: PageModel.mockMotorcycles
+                items: [
+                    "Harley-Davidson", "Yamaha", "Kawasaki",
+                    "Ducati", "Honda", "Suzuki", "BMW",
+                    "Triumph", "KTM", "Aprilia", "Yamaha1",
+                    "Kawasaki1", "Ducati1", "Honda1", "Suzuki1",
+                    "Kawasaki2", "Ducati2", "Honda2", "Suzuki2"
+                ]
             ),
             PageModel(
                 imageName: ImageAssetsNames.furnitureImageName,
-                items: PageModel.mockFurniture
+                items: [
+                    "chair", "sofa", "table", "bed",
+                    "desk", "lamp", "wardrobe"
+                ]
             ),
             PageModel(
                 imageName: ImageAssetsNames.fruitsImageName,
-                items: PageModel.mockFruits
+                items: [
+                    "apple", "orange", "banana", "strawberry",
+                    "pineapple", "grapes", "raspberries", "watermelon",
+                    "apple1"
+                ]
             ),
         ]
         return pages
